@@ -22,10 +22,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
+
+
         weatherTask().execute()
     }
 
-        inner class weatherTask():AsyncTask<String,Void,String>(){
+        inner class weatherTask:AsyncTask<String,Void,String>(){
 
             //this function will show error in case when data is not loaded
 
@@ -33,19 +35,20 @@ class MainActivity : AppCompatActivity() {
                 super.onPreExecute()
                 activityMainBinding.loader.visibility = View.VISIBLE
                 activityMainBinding.mainContainerRelativeLayout.visibility = View.GONE
-                activityMainBinding.mainContainerRelativeLayout.visibility = View.GONE
+                activityMainBinding.tvError.visibility = View.GONE
             }
 
             //this will work with the API
             override fun doInBackground(vararg p0: String?): String? {
                 var response:String?
                 try{
-                    response = URL("https://api.openweathermap.org/data/2.5/weather?q=$cityName&APPID=$apiKey").
+                    response = URL("https://api.openweathermap.org/data/2.5/weather?q=$cityName&units=metric&APPID=$apiKey").
                     readText(Charsets.UTF_8)
                 }
                 catch(e:Exception) {
                     response = null
                 }
+                System.out.println("Hello"+response)
                 return response
             }
 
@@ -54,9 +57,9 @@ class MainActivity : AppCompatActivity() {
                 super.onPostExecute(result)
 
                 try{
-                    if(result.isNullOrEmpty()){
-                        throw Exception("Is empty")
-                    }
+//                    if(result.isNullOrEmpty()){
+//                        throw Exception("Is empty")
+//                    }
 
                     //setting the Api response
                     val jsonObj = JSONObject(result)
